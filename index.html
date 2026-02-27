@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FillWrds — Word Search Game</title>
+  <link rel="stylesheet" href="styles/global.css" />
+
+  <!-- Web Components -->
+  <script type="module" src="components/theme-select/theme-select.js"></script>
+  <script type="module" src="components/lang-select/lang-select.js"></script>
+  <script type="module" src="components/level-select/level-select.js"></script>
+  <script type="module" src="components/word-list/word-list.js"></script>
+  <script type="module" src="components/game-board/game-board.js"></script>
+  <script type="module" src="components/win-modal/win-modal.js"></script>
+
+  <!-- App controller -->
+  <script type="module" src="core/app.js"></script>
+</head>
+<body>
+
+  <header class="app-header">
+    <h1>FillWrds</h1>
+    <div class="header-controls">
+      <theme-select selected-theme="system"></theme-select>
+      <lang-select selected-lang="en"></lang-select>
+    </div>
+  </header>
+
+  <main class="app-main">
+
+    <aside class="app-sidebar">
+
+      <div class="card">
+        <level-select selected-level="easy"></level-select>
+      </div>
+
+      <div class="card">
+        <div class="custom-words-header">
+          <label class="custom-words-label" for="custom-words">Custom words</label>
+          <button class="custom-words-clear" id="btn-clear-words" type="button" aria-label="Clear custom words">Clear</button>
+        </div>
+        <textarea
+          id="custom-words"
+          class="custom-words-input"
+          placeholder="apple, banana, cherry…"
+          rows="3"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false"
+        ></textarea>
+        <p class="custom-words-hint">Separate with commas. Leave empty to fetch automatically.</p>
+      </div>
+
+      <div class="card">
+        <word-list></word-list>
+      </div>
+
+      <button class="btn-primary" id="btn-start" type="button">
+        <span class="btn-spinner" aria-hidden="true"></span>
+        <span class="btn-label">New Game</span>
+      </button>
+
+    </aside>
+
+    <section class="app-board">
+      <game-board></game-board>
+    </section>
+
+  </main>
+
+  <win-modal></win-modal>
+  <div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+</body>
+</html>
