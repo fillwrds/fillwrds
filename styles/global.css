@@ -10,6 +10,7 @@
 html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -20,6 +21,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 button {
@@ -167,6 +170,7 @@ ul {
    ============================================= */
 .app-header {
   width: 100%;
+  max-width: 100%;
   height: var(--header-height);
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
@@ -175,6 +179,7 @@ ul {
   justify-content: space-between;
   padding: 0 1.5rem;
   box-shadow: var(--shadow-sm);
+  overflow: hidden;
 }
 
 .header-controls {
@@ -394,10 +399,21 @@ ul {
   .app-main {
     flex-direction: column;
     padding: 1rem;
+    width: 100%;
   }
 
   .app-sidebar {
     flex: none;
     width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-header {
+    padding: 0 .75rem;
+  }
+
+  .header-controls {
+    gap: .4rem;
   }
 }
