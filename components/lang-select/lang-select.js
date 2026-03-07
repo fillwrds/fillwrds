@@ -14,10 +14,10 @@
  */
 
 const LANGUAGES = [
-  { code: 'be', label: 'Belarusian', flag: '' },
-  { code: 'uk', label: 'Ukrainian',  flag: '' },
-  { code: 'en', label: 'English',    flag: '' },
-  { code: 'ru', label: 'Russian',    flag: '' },
+  { code: 'be', label: 'Belarusian', short: 'BE' },
+  { code: 'uk', label: 'Ukrainian',  short: 'UK' },
+  { code: 'en', label: 'English',    short: 'EN' },
+  { code: 'ru', label: 'Russian',    short: 'RU' },
 ];
 
 const template = document.createElement('template');
@@ -26,19 +26,19 @@ template.innerHTML = `
   :host {
     display: flex;
     align-items: center;
-    gap: .35rem;
+    gap: .2rem;
   }
 
   .lang-btn {
     display: inline-flex;
     align-items: center;
-    gap: .35rem;
-    padding: .3rem .65rem;
+    gap: .25rem;
+    padding: .2rem .35rem;
     border: 1.5px solid transparent;
     border-radius: 6px;
     background: transparent;
     cursor: pointer;
-    font-size: .82rem;
+    font-size: .78rem;
     font-weight: 500;
     color: inherit;
     transition: background 120ms ease, border-color 120ms ease;
@@ -58,18 +58,9 @@ template.innerHTML = `
     font-weight: 700;
   }
 
-  .flag {
-    font-size: 1.1rem;
-    line-height: 1;
-  }
-
-  /* On narrow screens hide the text label, keep flag only */
-  @media (max-width: 480px) {
-    .lang-label { display: none; }
-    .lang-btn   { padding: .3rem .45rem; }
-  }
+  .lang-label { display: none; }
 </style>
-${LANGUAGES.map(({ code, label, flag }) => `
+${LANGUAGES.map(({ code, label, short }) => `
   <button
     class="lang-btn"
     data-lang="${code}"
@@ -77,8 +68,7 @@ ${LANGUAGES.map(({ code, label, flag }) => `
     aria-label="${label}"
     type="button"
   >
-    <span class="flag" aria-hidden="true">${flag}</span>
-    <span class="lang-label">${label}</span>
+    ${short}
   </button>
 `).join('')}
 `;

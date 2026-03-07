@@ -91,7 +91,7 @@ template.innerHTML = `
     background: var(--color-cell-bg);
     border: 1px solid var(--color-border);
     font-size: clamp(.55rem, 2.2vw, 1rem);
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .02em;
     color: var(--color-text);
@@ -169,6 +169,10 @@ template.innerHTML = `
     font-size: 1rem;
     text-align: center;
     padding: 2rem;
+  }
+
+  @media (max-width: 480px) {
+    .cell { font-size: clamp(.7rem, 4vw, 1rem); }
   }
 
   /* Row wrapper — invisible to CSS grid but required for ARIA role="row" */
