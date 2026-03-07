@@ -198,6 +198,7 @@ function setLoading(on) {
 }
 
 function applyLang(lang) {
+  document.documentElement.lang = lang;
   // Update static DOM elements with data-i18n attributes
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key = el.dataset.i18n;
