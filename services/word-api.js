@@ -16,6 +16,8 @@
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
+import { filterExpletives } from './profanity-filter.js';
+
 export const LEVEL_CONFIG = {
   easy:   { min: 3, max: 5  },
   medium: { min: 5, max: 8  },
@@ -147,7 +149,7 @@ async function fetchEnglishWords(level, count) {
     throw new Error(`[word-api] Could not fetch English words for level "${level}"`);
   }
 
-  return shuffle([...results]).slice(0, count);
+  return shuffle(filterExpletives([...results], 'en')).slice(0, count);
 }
 
 // ── Wiktionary adapter (ru, be, uk) ────────────────────────────────────────────
@@ -212,7 +214,7 @@ async function fetchWiktionaryWords(lang, level, count) {
     throw new Error(`[word-api] Could not fetch ${lang} words for level "${level}"`);
   }
 
-  return shuffle([...results]).slice(0, count);
+  return shuffle(filterExpletives([...results], lang)).slice(0, count);
 }
 
 // ── Public API ────────────────────────────────────────────────────────────────
