@@ -104,6 +104,19 @@ template.innerHTML = `
     touch-action: none;
     -webkit-touch-callout: none;
     outline: none;
+    pointer-events: none;
+  }
+
+  .cell-letter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 65%;
+    height: 65%;
+    border-radius: 3px;
+    pointer-events: auto;
+    touch-action: none;
+    cursor: pointer;
   }
 
   /* Keyboard focus ring — visible only on keyboard nav */
@@ -299,8 +312,11 @@ class GameBoard extends HTMLElement {
       for (let c = 0; c < size; c++) {
         const letter = this._grid[r][c];
         const cell = document.createElement('div');
-        cell.className   = 'cell';
-        cell.textContent = letter;
+        cell.className = 'cell';
+        const letterSpan = document.createElement('span');
+        letterSpan.className = 'cell-letter';
+        letterSpan.textContent = letter;
+        cell.appendChild(letterSpan);
         cell.dataset.row = r;
         cell.dataset.col = c;
         cell.setAttribute('role', 'gridcell');
@@ -450,7 +466,7 @@ class GameBoard extends HTMLElement {
       this._selCells = [];
     }
 
-    const el = e.target;
+    const el = e.currentTarget;
     if (!el || !el.classList.contains('cell')) return;
     const row = parseInt(el.dataset.row, 10);
     const col = parseInt(el.dataset.col, 10);
@@ -466,8 +482,9 @@ class GameBoard extends HTMLElement {
     e.preventDefault();
 
     // Use elementFromPoint so both mouse drag and touch slide work correctly
-    const el = this.shadowRoot.elementFromPoint(e.clientX, e.clientY);
-    if (!el || !el.classList.contains('cell')) return;
+    const hit = this.shadowRoot.elementFromPoint(e.clientX, e.clientY);
+    const el = hit?.closest('.cell');
+    if (!el) return;
 
     const row = parseInt(el.dataset.row, 10);
     const col = parseInt(el.dataset.col, 10);
