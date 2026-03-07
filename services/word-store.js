@@ -102,10 +102,10 @@ export async function getWords(lang, level, count) {
   const db      = await openDB();
   const used    = await getRecentlyUsedWords(db, lang, level);
 
-  // Collect up to count*5 candidates then shuffle + slice for variety.
-  // Without this, IndexedDB's alphabetical key order means the same words
-  // are always returned first on every game start.
-  const COLLECT_LIMIT = count * 5;
+  // Collect a large candidate pool then shuffle + slice for variety.
+  // IndexedDB iterates alphabetically so a small limit biases results
+  // toward words starting with А; 500+ ensures broad alphabet coverage.
+  const COLLECT_LIMIT = Math.max(count * 50, 500);
 
   return new Promise((resolve, reject) => {
     const tx      = db.transaction('words', 'readonly');
