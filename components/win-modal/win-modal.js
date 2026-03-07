@@ -12,6 +12,8 @@
  *   play-again  — CustomEvent (bubbles + composed) when player wants a new game
  */
 
+import { t } from '../../core/i18n.js';
+
 const template = document.createElement('template');
 template.innerHTML = `
 <style>
@@ -173,8 +175,17 @@ template.innerHTML = `
 `;
 
 class WinModal extends HTMLElement {
+  static get observedAttributes() { return ['lang']; }
+
+  attributeChangedCallback(name, oldVal, newVal) {
+    if (name === 'lang' && oldVal !== newVal) {
+      this._lang = newVal;
+    }
+  }
+
   connectedCallback() {
     if (this.shadowRoot) return; // already set up
+    this._lang = this.getAttribute('lang') ?? 'en';
 
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.appendChild(template.content.cloneNode(true));
@@ -200,13 +211,17 @@ class WinModal extends HTMLElement {
     const modal = this.shadowRoot.querySelector('.modal');
     modal.classList.remove('error');
 
-    this.shadowRoot.getElementById('modal-icon').textContent    = '🎉';
-    this.shadowRoot.getElementById('modal-title').textContent   = 'You found them all!';
-    this.shadowRoot.getElementById('modal-subtitle').textContent = 'Great job! Here\'s how you did:';
-    this.shadowRoot.getElementById('stat-words').textContent    = words.length;
-    this.shadowRoot.getElementById('stat-time').textContent     = formatTime(elapsed);
-    this.shadowRoot.getElementById('modal-stats').hidden        = false;
-    this.shadowRoot.getElementById('btn-play-again').hidden     = false;
+    const lang = this._lang ?? 'en';
+    this.shadowRoot.getElementById('modal-icon').textContent     = '🎉';
+    this.shadowRoot.getElementById('modal-title').textContent    = t('winTitle', lang);
+    this.shadowRoot.getElementById('modal-subtitle').textContent = t('winSubtitle', lang);
+    this.shadowRoot.getElementById('stat-words').textContent     = words.length;
+    this.shadowRoot.getElementById('stat-time').textContent      = formatTime(elapsed);
+    this.shadowRoot.getElementById('modal-stats').hidden         = false;
+    this.shadowRoot.querySelector('.stat:nth-child(1) .stat-label').textContent = t('wordsLabel', lang);
+    this.shadowRoot.querySelector('.stat:nth-child(2) .stat-label').textContent = t('timeLabel', lang);
+    this.shadowRoot.getElementById('btn-play-again').textContent = t('playAgain', lang);
+    this.shadowRoot.getElementById('btn-play-again').hidden      = false;
 
     // Replace dismiss button if present from a previous error
     const dismiss = this.shadowRoot.getElementById('btn-dismiss');
@@ -221,8 +236,9 @@ class WinModal extends HTMLElement {
     const modal = this.shadowRoot.querySelector('.modal');
     modal.classList.add('error');
 
+    const lang = this._lang ?? 'en';
     this.shadowRoot.getElementById('modal-icon').textContent     = '⚠️';
-    this.shadowRoot.getElementById('modal-title').textContent    = 'Something went wrong';
+    this.shadowRoot.getElementById('modal-title').textContent    = t('errorTitle', lang);
     this.shadowRoot.getElementById('modal-subtitle').textContent = message;
     this.shadowRoot.getElementById('modal-stats').hidden         = true;
     this.shadowRoot.getElementById('btn-play-again').hidden      = true;
@@ -233,7 +249,7 @@ class WinModal extends HTMLElement {
       btn.id        = 'btn-dismiss';
       btn.className = 'btn-dismiss';
       btn.type      = 'button';
-      btn.textContent = 'Dismiss';
+      btn.textContent = t('dismiss', this._lang ?? 'en');
       btn.addEventListener('click', () => this.hide());
       modal.appendChild(btn);
     }

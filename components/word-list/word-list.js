@@ -18,6 +18,8 @@
  *   el.markFound('cat');
  */
 
+import { t } from '../../core/i18n.js';
+
 const template = document.createElement('template');
 template.innerHTML = `
 <style>
@@ -134,6 +136,8 @@ template.innerHTML = `
 `;
 
 class WordList extends HTMLElement {
+  static get observedAttributes() { return ['lang']; }
+
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -141,6 +145,14 @@ class WordList extends HTMLElement {
 
     this._words = [];
     this._found = new Set();
+    this._lang  = 'en';
+  }
+
+  attributeChangedCallback(name, oldVal, newVal) {
+    if (name === 'lang' && oldVal !== newVal) {
+      this._lang = newVal;
+      this._applyLang(newVal);
+    }
   }
 
   // ── Properties ────────────────────────────────────────────────────────────
@@ -190,7 +202,7 @@ class WordList extends HTMLElement {
     const list = this.shadowRoot.querySelector('.word-grid');
 
     if (this._words.length === 0) {
-      list.innerHTML = '<li class="empty">No words yet. Start a new game!</li>';
+      list.innerHTML = `<li class="empty">${t('noWords', this._lang)}</li>`;
       this._updateProgress();
       return;
     }
@@ -218,8 +230,13 @@ class WordList extends HTMLElement {
     const pct    = total > 0 ? Math.round((done / total) * 100) : 0;
 
     this.shadowRoot.querySelector('.progress-text').textContent =
-      `${done} / ${total} found`;
+      `${done} / ${total} ${t('found', this._lang)}`;
     this.shadowRoot.querySelector('.progress-fill').style.width = `${pct}%`;
+  }
+
+  _applyLang(lang) {
+    this.shadowRoot.querySelector('.section-label').textContent = t('wordsToFind', lang);
+    this._render();
   }
 }
 

@@ -16,6 +16,7 @@ import { getWords, addWords,
 import { generateGrid }                  from './grid.js';
 import { isGameWon }                     from './validator.js';
 import { getLevel }                      from './levels.js';
+import { t }                             from './i18n.js';
 
 // ── DOM references ─────────────────────────────────────────────────────────────
 
@@ -75,7 +76,7 @@ async function startGame() {
     // Use custom words directly — skip API and cache entirely
     if (customWords.length < 2) {
       setLoading(false);
-      showError('Enter at least 2 words separated by commas.');
+      showError(t('errMinWords', state.lang));
       return;
     }
     words = customWords;
@@ -94,7 +95,7 @@ async function startGame() {
 
     if (words.length < 3) {
       setLoading(false);
-      showError('Not enough words available. Check your connection and try again.');
+      showError(t('errNoWords', state.lang));
       return;
     }
   }
@@ -147,6 +148,7 @@ document.addEventListener('theme-changed', (e) => {
 document.addEventListener('lang-changed', (e) => {
   state.lang = e.detail.lang;
   localStorage.setItem('fillwrds-lang', state.lang);
+  applyLang(state.lang);
 });
 
 document.addEventListener('level-changed', (e) => {
@@ -187,12 +189,28 @@ function setLoading(on) {
   const label = btnStart.querySelector('.btn-label');
   btnStart.disabled = on;
   btnStart.classList.toggle('loading', on);
-  if (label) label.textContent = on ? 'Loading…' : 'New Game';
+  if (label) label.textContent = on ? t('loading', state.lang) : t('newGame', state.lang);
   if (on) {
     gameBoard.showLoading();
   } else {
     gameBoard.hideLoading();
   }
+}
+
+function applyLang(lang) {
+  // Update static DOM elements with data-i18n attributes
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    el.textContent = t(key, lang);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    el.placeholder = t(el.dataset.i18nPlaceholder, lang);
+  });
+  document.title = t('pageTitle', lang);
+  // Propagate to components
+  levelSelect?.setAttribute('lang', lang);
+  wordList?.setAttribute('lang', lang);
+  winModal?.setAttribute('lang', lang);
 }
 
 function applyTheme(theme) {
@@ -244,5 +262,6 @@ langSelect.selectedLang    = initLang;
 levelSelect.selectedLevel  = initLevel;
 themeSelect.selectedTheme  = initTheme;
 applyTheme(initTheme);
+applyLang(initLang);
 
 console.info('[FillWrds] App ready. Press "New Game" to start.');

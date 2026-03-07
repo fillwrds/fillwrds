@@ -37,20 +37,21 @@
 
       <div class="card">
         <div class="custom-words-header">
-          <label class="custom-words-label" for="custom-words">Custom words</label>
-          <button class="custom-words-clear" id="btn-clear-words" type="button" aria-label="Clear custom words">Clear</button>
+          <label class="custom-words-label" for="custom-words" data-i18n="customWords">Custom words</label>
+          <button class="custom-words-clear" id="btn-clear-words" type="button" data-i18n="clear" aria-label="Clear custom words">Clear</button>
         </div>
         <textarea
           id="custom-words"
           class="custom-words-input"
           placeholder="apple, banana, cherry…"
+          data-i18n-placeholder="placeholder"
           rows="3"
           autocomplete="off"
           autocorrect="off"
           autocapitalize="off"
           spellcheck="false"
         ></textarea>
-        <p class="custom-words-hint">Separate with commas. Leave empty to fetch automatically.</p>
+        <p class="custom-words-hint" data-i18n="hint">Separate with commas. Leave empty to fetch automatically.</p>
       </div>
 
       <div class="card">
@@ -59,7 +60,7 @@
 
       <button class="btn-primary" id="btn-start" type="button">
         <span class="btn-spinner" aria-hidden="true"></span>
-        <span class="btn-label">New Game</span>
+        <span class="btn-label" data-i18n="newGame">New Game</span>
       </button>
 
     </aside>

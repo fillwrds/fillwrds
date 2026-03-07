@@ -15,6 +15,7 @@
  */
 
 import { LEVELS } from '../../core/levels.js';
+import { t } from '../../core/i18n.js';
 
 // Badge colour per level (matches global CSS vars conceptually,
 // but inlined here so the shadow root stays fully self-contained)
@@ -142,7 +143,7 @@ ${LEVELS.map(({ id, label, wordLengthMin, wordLengthMax, wordCount, gridSize }) 
 
 class LevelSelect extends HTMLElement {
   static get observedAttributes() {
-    return ['selected-level'];
+    return ['selected-level', 'lang'];
   }
 
   constructor() {
@@ -168,6 +169,9 @@ class LevelSelect extends HTMLElement {
   attributeChangedCallback(name, oldVal, newVal) {
     if (name === 'selected-level' && oldVal !== newVal) {
       this._updatePressed(newVal);
+    }
+    if (name === 'lang' && oldVal !== newVal) {
+      this._applyLang(newVal);
     }
   }
 
@@ -198,6 +202,18 @@ class LevelSelect extends HTMLElement {
   _updatePressed(activeLevel) {
     this.shadowRoot.querySelectorAll('.level-btn').forEach(btn => {
       btn.setAttribute('aria-pressed', String(btn.dataset.level === activeLevel));
+    });
+  }
+
+  _applyLang(lang) {
+    this.shadowRoot.querySelector('.section-label').textContent = t('difficulty', lang);
+    LEVELS.forEach(({ id, wordLengthMin, wordLengthMax, wordCount, gridSize }) => {
+      const btn = this.shadowRoot.querySelector(`.level-btn[data-level="${id}"]`);
+      if (!btn) return;
+      btn.querySelector('.level-name').textContent = t(id, lang);
+      btn.querySelector('.level-badge').textContent = t(id, lang);
+      btn.querySelector('.level-meta').textContent =
+        `${wordLengthMin}–${wordLengthMax} ${t('letters', lang)} · ${wordCount} ${t('words', lang)} · ${gridSize}×${gridSize}`;
     });
   }
 }
